@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include <cmath>
+#include <algorithm> // max
 
 using namespace std;
 
@@ -52,16 +53,22 @@ public:
 	void insert(Event event) {
         //cerr << "begin insert" << endl;
 
+        //cerr << "insert event.isArrival: " << event.getIsArrival() << endl;
+        //cerr << "size = " << GlobalEventList.size() << endl;
+
 		if (GlobalEventList.size() == 0) {
             GlobalEventList.push_front(event);
+            return;
         }
 
 		for (std::list<Event>::iterator itr = GlobalEventList.begin(); itr != GlobalEventList.end(); itr++) {
 			if (itr->getEventTime() > event.getEventTime()) {
                 GlobalEventList.insert(itr, event);
-                break;
+                return;
             }
         }
+
+        GlobalEventList.push_back(event);
 	
 
         //cerr << "end insert " << endl;
@@ -105,7 +112,7 @@ int	main(int argc, char const *argv[])
     double packet = 0;
 
 
-    Event e = Event(time, true);
+    Event e = Event(time + nedt(lambda), true);
     GEL eventList = GEL();
     eventList.insert(e);
 
@@ -123,8 +130,8 @@ int	main(int argc, char const *argv[])
         // sums length by multiplying length by elapsed time
         // since length = 1 could still be considered empty queue
         // may want to chech it should be length, not length - 1
-        sumLength += length * (e.getEventTime() - time);
-        //cerr << "event time: " << e.getEventTime() << "   prev time: " << time << endl; 
+        sumLength += max(0, length - 1) * (e.getEventTime() - time);
+        //cerr << "prev time: " << time  << "   event time: " << e.getEventTime() << endl; 
 
         // updates time
         time = e.getEventTime();
@@ -132,13 +139,18 @@ int	main(int argc, char const *argv[])
         // handles Arrival event
         if (e.getIsArrival())
         {
+            //cerr << "is Arrival, i: " << i << endl;
             // insert new arrival event
             eventList.insert(Event(time + nedt(lambda), true));
+
+            //cerr << "length: " << length << endl;
 
             // if server is free, schedule a departure event, and update length
             if (length == 0)
             {
+                //cerr << "hello from length = 0" << endl;
                 packet = nedt(mu);
+                //cerr << "packet: " << packet << endl;
                 busy += packet;
                 eventList.insert(Event(time + packet, false));
                 length ++;
@@ -162,12 +174,15 @@ int	main(int argc, char const *argv[])
         // handles departure event
         else 
         {
+            //cerr << "is departure" << endl;
             length --;
 
             // if packet still in queue, create a departure event
             if (length > 0)
             {
                 packet = nedt(mu);
+                //cerr << "packet: " << packet << endl;
+
                 busy += packet;
                 eventList.insert(Event(time + packet, false));
             }
