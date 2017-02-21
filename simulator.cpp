@@ -101,27 +101,24 @@ int	main(int argc, char const *argv[])
     std::cin >> mu;
 
     std::cout << "Buffer Size: ";
-    std::cin >> maxbuffer;
+    std::cin >> maxbuffer; 
 
     // initialize
-    int length = 0;
-    int dropNum = 0;
-    double sumLength = 0;
-    double time = 0;
-    double busy = 0;
-    double packet = 0;
+    int length = 0; // length of queue
+    int dropNum = 0; // number of droped packets
+    double sumLength = 0; // integration for average queue length
+    double time = 0; // current time  
+    double busy = 0; // packets waiting in queue?
+    double packet = 0; // service time of packet // only thing needed as concept of queue 
 
 
     Event e = Event(time + nedt(lambda), true);
     GEL eventList = GEL();
     eventList.insert(e);
 
-    //cerr << "hello 1" << endl;
-
     // for 100000 events 
     // process event
     // just going by the number given
-
     for (int i = 0; i < 100000; i++)
     {
         // get closest event and update time
@@ -129,9 +126,8 @@ int	main(int argc, char const *argv[])
 
         // sums length by multiplying length by elapsed time
         // since length = 1 could still be considered empty queue
-        // may want to chech it should be length, not length - 1
-        sumLength += max(0, length - 1) * (e.getEventTime() - time);
-        //cerr << "prev time: " << time  << "   event time: " << e.getEventTime() << endl; 
+        // may want to check it should be length, not length - 1
+        sumLength += max(0, length - 1) * (e.getEventTime() - time); // area under graph of packets in queue (len - 1) vs time
 
         // updates time
         time = e.getEventTime();
@@ -139,11 +135,8 @@ int	main(int argc, char const *argv[])
         // handles Arrival event
         if (e.getIsArrival())
         {
-            //cerr << "is Arrival, i: " << i << endl;
             // insert new arrival event
             eventList.insert(Event(time + nedt(lambda), true));
-
-            //cerr << "length: " << length << endl;
 
             // if server is free, schedule a departure event, and update length
             if (length == 0)
@@ -159,7 +152,7 @@ int	main(int argc, char const *argv[])
                 // would have max buffer equal to 1
             }
             // else if room in buffer
-            // maxbuffer = -1 denotes infinite buffer
+            // maxbuffer -1 denotes infinite buffer
             else if (maxbuffer == -1 || length - 1 < maxbuffer)
             {
                 length ++;
@@ -174,14 +167,12 @@ int	main(int argc, char const *argv[])
         // handles departure event
         else 
         {
-            //cerr << "is departure" << endl;
             length --;
 
             // if packet still in queue, create a departure event
             if (length > 0)
             {
                 packet = nedt(mu);
-                //cerr << "packet: " << packet << endl;
 
                 busy += packet;
                 eventList.insert(Event(time + packet, false));
@@ -194,7 +185,6 @@ int	main(int argc, char const *argv[])
     cout << "Utilization: " << busy / time << endl;
     cout << "Mean queue length: " << sumLength / time << endl;
     cout << "Number of packets dropped: " << dropNum << endl;
-
 
 
 	return 0;
