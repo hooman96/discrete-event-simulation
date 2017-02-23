@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include <cmath>
+#include <math.h>
 #include <algorithm> // max
 
 using namespace std;
@@ -94,13 +95,13 @@ int	main(int argc, char const *argv[])
     double mu;
     double maxbuffer;
 
-    std::cout << "lambda: ";
+    //std::cout << "lambda: ";
     std::cin >> lambda;
 
-    std::cout << "mu: ";
+    //std::cout << "mu: ";
     std::cin >> mu;
 
-    std::cout << "Buffer Size: ";
+    //std::cout << "Buffer Size: ";
     std::cin >> maxbuffer;
 
     // initialize
@@ -190,11 +191,18 @@ int	main(int argc, char const *argv[])
 
     }
 
+    std::cout << "lambda: ";
+    std::cout << lambda << endl;
 
+    std::cout << "mu: ";
+    std::cout << mu << endl;
+
+    std::cout << "Buffer Size: ";
+    std::cout << maxbuffer << endl;
+    
     cout << "Utilization: " << busy / time << endl;
     cout << "Mean queue length: " << sumLength / time << endl;
-    cout << "Number of packets dropped: " << dropNum << endl;
-
+    cout << "Number of packets dropped: " << dropNum << endl << endl << endl;
 
 
 	return 0;
@@ -206,4 +214,11 @@ double nedt(double rate)
      double u;
      u = drand48();
      return ((-1/rate)*log(1-u));
+}
+
+double pareto(double rate)
+{
+    double u = drand48();
+    double y = ((-1/rate)*log(1-u));
+    double time = 1*exp(y); // minium is one
 }

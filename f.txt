@@ -1,0 +1,56 @@
+lambda: 0.1
+mu: 1
+Buffer Size: -1
+Utilization: 0.101122
+Mean queue length: 0.0119569
+Number of packets dropped: 0
+
+
+lambda: 0.25
+mu: 1
+Buffer Size: -1
+Utilization: 0.252429
+Mean queue length: 0.0849784
+Number of packets dropped: 0
+
+
+lambda: 0.4
+mu: 1
+Buffer Size: -1
+Utilization: 0.403851
+Mean queue length: 0.269175
+Number of packets dropped: 0
+
+
+lambda: 0.55
+mu: 1
+Buffer Size: -1
+Utilization: 0.554509
+Mean queue length: 0.67358
+Number of packets dropped: 0
+
+
+lambda: 0.65
+mu: 1
+Buffer Size: -1
+Utilization: 0.657659
+Mean queue length: 1.25263
+Number of packets dropped: 0
+
+
+lambda: 0.8
+mu: 1
+Buffer Size: -1
+Utilization: 0.802415
+Mean queue length: 3.20981
+Number of packets dropped: 0
+
+
+lambda: 0.9
+mu: 1
+Buffer Size: -1
+Utilization: 0.912173
+Mean queue length: 8.91237
+Number of packets dropped: 0
+
+
